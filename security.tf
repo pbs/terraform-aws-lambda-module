@@ -10,11 +10,21 @@ data "aws_iam_policy_document" "default_policy_document" {
 
   statement {
     actions = [
-      "logs:PutLogEvents",
-      "logs:CreateLogStream",
       "logs:CreateLogGroup",
     ]
-    resources = ["arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${local.log_group_name}"]
+    resources = [
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*",
+    ]
+  }
+
+  statement {
+    actions = [
+      "logs:PutLogEvents",
+      "logs:CreateLogStream",
+    ]
+    resources = [
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.log_group_name}:*",
+    ]
   }
 
   statement {
