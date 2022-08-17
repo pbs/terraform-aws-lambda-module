@@ -129,3 +129,4 @@ Below is automatically generated documentation on this Terraform module using [t
 | <a name="output_invoke_arn"></a> [invoke\_arn](#output\_invoke\_arn) | Invocation ARN of the lambda function |
 | <a name="output_name"></a> [name](#output\_name) | Name of the lambda function |
 | <a name="output_qualified_arn"></a> [qualified\_arn](#output\_qualified\_arn) | Qualified ARN of the lambda function |
+| <a name="output_sg"></a> [sg](#output\_sg) | Security group of the lambda function if there is one |
