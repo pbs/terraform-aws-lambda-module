@@ -38,6 +38,19 @@ data "aws_iam_policy_document" "default_policy_document" {
       "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${local.ssm_path}/*"
     ]
   }
+  dynamic "statement" {
+    for_each = local.create_security_group ? [local.create_security_group] : []
+    content {
+      actions = [
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:CreateNetworkInterface",
+        "ec2:DeleteNetworkInterface",
+        "ec2:DescribeInstances",
+        "ec2:AttachNetworkInterface",
+      ]
+      resources = ["*"]
+    }
+  }
 }
 
 module "default_role" {
@@ -70,4 +83,19 @@ resource "aws_security_group" "sg" {
     local.tags,
     { Name = "${local.name} SG" },
   )
+}
+
+resource "aws_security_group_rule" "egress" {
+  count             = local.create_security_group ? 1 : 0
+  description       = "Allow all outbound traffic"
+  security_group_id = local.security_group_id
+  type              = "egress"
+  protocol          = "-1"
+
+  from_port = 0
+  to_port   = 0
+
+  cidr_blocks = [
+    "0.0.0.0/0",
+  ]
 }

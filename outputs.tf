@@ -17,3 +17,8 @@ output "qualified_arn" {
   description = "Qualified ARN of the lambda function"
   value       = aws_lambda_function.lambda.qualified_arn
 }
+
+output "sg" {
+  description = "Security group of the lambda function if there is one"
+  value       = local.security_group_id
+}
