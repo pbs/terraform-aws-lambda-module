@@ -84,3 +84,18 @@ resource "aws_security_group" "sg" {
     { Name = "${local.name} SG" },
   )
 }
+
+resource "aws_security_group_rule" "egress" {
+  count             = local.create_security_group ? 1 : 0
+  description       = "Allow all outbound traffic"
+  security_group_id = local.security_group_id
+  type              = "egress"
+  protocol          = "-1"
+
+  from_port = 0
+  to_port   = 0
+
+  cidr_blocks = [
+    "0.0.0.0/0",
+  ]
+}

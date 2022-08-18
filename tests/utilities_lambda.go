@@ -36,12 +36,12 @@ func testLambda(t *testing.T, variant string) {
 	expectedName := fmt.Sprintf("example-tf-pbs-lambda-%s", variant)
 	expectedARN := fmt.Sprintf("arn:aws:lambda:%s:%s:function:%s", region, accountID, expectedName)
 
-	expectedResponse := fmt.Sprintf("\"Hello Jane!\"")
+	expectedResponse := "\"Hello Jane!\""
 	if variant == "env" {
-		expectedResponse = fmt.Sprintf("\"Hello Sarah!\"")
+		expectedResponse = "\"Hello Sarah!\""
 	}
 	if variant == "ssm" {
-		expectedResponse = fmt.Sprintf("\"Hello John!\"")
+		expectedResponse = "\"Hello John!\""
 	}
 
 	assert.Equal(t, expectedARN, arn)
