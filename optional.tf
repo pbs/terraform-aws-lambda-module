@@ -121,3 +121,9 @@ variable "subnets" {
   default     = null
   type        = list(string)
 }
+
+variable "ssm_path" {
+  description = "SSM path to use for environment variables. If null, defaults to /$${var.environment}/$${var.name}"
+  default     = null
+  type        = string
+}

@@ -1,13 +1,11 @@
-# PBS TF lambda module
+# PBS TF Lambda Module
 
 ## Installation
 
 ### Using the Repo Source
 
 ```hcl
-module "lambda" {
-    source = "github.com/pbs/terraform-aws-lambda-module?ref=x.y.z"
-}
+github.com/pbs/terraform-aws-lambda-module?ref=x.y.z
 ```
 
 ### Alternative Installation Methods
