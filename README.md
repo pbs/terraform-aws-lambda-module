@@ -5,7 +5,7 @@
 ### Using the Repo Source
 
 ```hcl
-github.com/pbs/terraform-aws-lambda-module?ref=0.1.0
+github.com/pbs/terraform-aws-lambda-module?ref=x.y.z
 ```
 
 ### Alternative Installation Methods
@@ -22,7 +22,7 @@ Integrate this module like so:
 
 ```hcl
 module "role" {
-  source = "github.com/pbs/terraform-aws-lambda-module?ref=0.1.0"
+  source = "github.com/pbs/terraform-aws-lambda-module?ref=x.y.z"
 
   handler  = "main"
   filename = "../artifacts/handler.zip"
@@ -42,7 +42,7 @@ module "role" {
 
 If this repo is added as a subtree, then the version of the module should be close to the version shown here:
 
-`0.1.0`
+`x.y.z`
 
 Note, however that subtrees can be altered as desired within repositories.
 
@@ -91,7 +91,7 @@ Below is automatically generated documentation on this Terraform module using [t
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment (sharedtools, dev, staging, prod) | `string` | n/a | yes |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment (sharedtools, dev, staging, qa, prod) | `string` | n/a | yes |
 | <a name="input_filename"></a> [filename](#input\_filename) | Filename for the artifact to use for the Lambda | `string` | n/a | yes |
 | <a name="input_handler"></a> [handler](#input\_handler) | Cloudwatch event pattern | `string` | n/a | yes |
 | <a name="input_organization"></a> [organization](#input\_organization) | Organization using this module. Used to prefix tags so that they are easily identified as being from your organization | `string` | n/a | yes |

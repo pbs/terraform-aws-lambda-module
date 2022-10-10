@@ -9,49 +9,62 @@ IFS=$'\n\t'
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
 
-pushd "$GIT_ROOT" > /dev/null
+pushd "$GIT_ROOT" >/dev/null
 
 if ! LATEST_GIT_TAG="$(gh api -X GET "repos/$GITHUB_REPOSITORY/tags" -f 'per_page=1' --jq '.[0].name')"; then
   LATEST_GIT_TAG="0.0.0"
 fi
 
-IFS=. read -r major minor patch <<EOF
+if [[ "$LATEST_GIT_TAG" == '0.0.0' ]] || ! [[ "$LATEST_GIT_TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  NEW_GIT_TAG='0.0.1'
+else
+  IFS=. read -r major minor patch <<EOF
 $LATEST_GIT_TAG
 EOF
 
-RELEASE_TYPE='patch'
+  RELEASE_TYPE='patch'
 
-echo 'Generating release notes to see what kind of release we are dealing with...'
-gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
-  -f tag_name="new-release" \
-  -f previous_tag_name="${LATEST_GIT_TAG}" \
-  -q .body > CHANGELOG.md
+  echo 'Generating release notes to see what kind of release we are dealing with...'
+  gh api "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+    -f tag_name="new-release" \
+    -f previous_tag_name="${LATEST_GIT_TAG}" \
+    -q .body >CHANGELOG.md
 
-cat CHANGELOG.md
+  cat CHANGELOG.md
 
-if grep -q 'Breaking Changes' CHANGELOG.md; then
-  RELEASE_TYPE='major'
-elif grep -q 'New Features' CHANGELOG.md; then
-  RELEASE_TYPE='minor'
+  if grep -q 'Breaking Changes' CHANGELOG.md; then
+    RELEASE_TYPE='major'
+  elif grep -q 'New Features' CHANGELOG.md; then
+    RELEASE_TYPE='minor'
+  fi
+
+  NEW_GIT_TAG=''
+
+  case "$RELEASE_TYPE" in
+  major) NEW_GIT_TAG="$((major + 1)).0.0" ;;
+  minor) NEW_GIT_TAG="$major.$((minor + 1)).0" ;;
+  patch) NEW_GIT_TAG="$major.$minor.$((patch + 1))" ;;
+  *) NEW_GIT_TAG="$RELEASE_TYPE" ;;
+  esac
 fi
-
-NEW_GIT_TAG=''
-
-case "$RELEASE_TYPE" in
-major) NEW_GIT_TAG="$((major+1)).0.0"; ;;
-minor) NEW_GIT_TAG="$major.$((minor+1)).0"; ;;
-patch) NEW_GIT_TAG="$major.$minor.$((patch+1))"; ;;
-*)     NEW_GIT_TAG="$RELEASE_TYPE"; ;;
-esac
 
 echo "Updating README using new tag: $NEW_GIT_TAG"
 
-if command -v sd > /dev/null; then
-    sd 'x.y.z' "$NEW_GIT_TAG" README.md
+if command -v sd >/dev/null; then
+  # This is only really necessary for the template
+  if ! grep -q 'x.y.z' README.md; then
+    sd "$LATEST_GIT_TAG" 'x.y.z' README.md
+  fi
+  sd 'x.y.z' "$NEW_GIT_TAG" README.md
 else
-    tmp="$(mktemp)"
-    sed "s/x.y.z/$NEW_GIT_TAG/g" README.md > "$tmp"
+  tmp="$(mktemp)"
+  # This is only really necessary for the template
+  if ! grep -q 'x.y.z' README.md; then
+    sed "s/$LATEST_GIT_TAG/x.y.z/g" README.md >"$tmp"
     mv "$tmp" README.md
+  fi
+  sed "s/x.y.z/$NEW_GIT_TAG/g" README.md >"$tmp"
+  mv "$tmp" README.md
 fi
 
 git add README.md
