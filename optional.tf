@@ -70,6 +70,24 @@ variable "lambda_insights_version" {
   type        = number
 }
 
+variable "lambda_insights_account_number" {
+  description = "Account number for the LambdaInsightsExtension layer"
+  default     = "580247275435"
+  type        = string
+}
+
+variable "parameters_and_secrets_version" {
+  description = "Lambda layer version for the AWS-Parameters-and-Secrets-Lambda-Extension layer"
+  default     = null
+  type        = number
+}
+
+variable "parameters_and_secrets_account_number" {
+  description = "Account number for the AWS-Parameters-and-Secrets-Lambda-Extension layer"
+  default     = "177933569100"
+  type        = string
+}
+
 variable "tracing_config_mode" {
   description = "Tracing config mode for X-Ray integration on Lambda"
   default     = "Active"
@@ -123,7 +141,19 @@ variable "subnets" {
 }
 
 variable "ssm_path" {
-  description = "SSM path to use for environment variables. If null, defaults to /$${var.environment}/$${var.name}"
+  description = "SSM path to use for environment variables. If null, defaults to /$${var.environment}/$${local.name}"
+  default     = null
+  type        = string
+}
+
+variable "create_app_config" {
+  description = "Create an AppConfig application and configuration profile for this Lambda"
+  default     = true
+  type        = bool
+}
+
+variable "app_config_name" {
+  description = "Name of the AppConfig application to create. If null, defaults to local.name"
   default     = null
   type        = string
 }
