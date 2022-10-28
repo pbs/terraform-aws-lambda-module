@@ -52,6 +52,17 @@ data "aws_iam_policy_document" "default_policy_document" {
       resources = ["*"]
     }
   }
+
+  dynamic "statement" {
+    for_each = var.allow_app_config_access ? [var.allow_app_config_access] : []
+    content {
+      actions = [
+        "appconfig:StartConfigurationSession",
+        "appconfig:GetLatestConfiguration",
+      ]
+      resources = ["*"]
+    }
+  }
 }
 
 module "default_role" {

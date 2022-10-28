@@ -52,13 +52,25 @@ func getSSMParamFromExtension(path string, name string) (SSMParameter, error) {
 	url := fmt.Sprintf("http://localhost:2773/systemsmanager/parameters/get/?name=%s&withDecryption=true", urlEncodedPath)
 	log.Print(url)
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return SSMParameter{}, err
+	}
 	req.Header.Set("X-Aws-Parameters-Secrets-Token", os.Getenv("AWS_SESSION_TOKEN"))
-	res, _ := client.Do(req)
+	res, err := client.Do(req)
+	if err != nil {
+		return SSMParameter{}, err
+	}
 	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
+	if res.StatusCode != 200 {
+		return SSMParameter{}, fmt.Errorf("Error getting SSM Parameter: %s", res.Status)
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return SSMParameter{}, err
+	}
 	var ssmParam SSMParameter
-	err := json.Unmarshal(body, &ssmParam)
+	err = json.Unmarshal(body, &ssmParam)
 	if err != nil {
 		log.Print(err)
 	}

@@ -1,26 +1,48 @@
 locals {
   name = var.name != null ? var.name : var.product
 
-  app_config_name = var.app_config_name != null ? var.app_config_name : local.name
-
   ssm_path         = var.ssm_path != null ? var.ssm_path : "/${var.environment}/${local.name}"
   environment_vars = var.environment_vars != null ? var.environment_vars : { "SSM_PATH" = local.ssm_path }
   environment_map  = length(local.environment_vars) == 0 ? toset([]) : toset([local.environment_vars])
 
-  default_lambda_insights_version_x86        = "21"
-  default_lambda_insights_version_arm        = "2"
-  default_parameters_and_secrets_version_x86 = "2"
+  default_lambda_insights_extension_version_x86        = "21"
+  default_lambda_insights_extension_version_arm        = "2"
+  default_parameters_and_secrets_extension_version_x86 = "2"
+  default_app_config_extension_version_x86             = "82"
+  default_app_config_extension_version_arm             = "15"
 
-  lambda_insights_version = var.lambda_insights_version != null ? var.lambda_insights_version : var.architectures == tolist(["arm64"]) ? local.default_lambda_insights_version_arm : local.default_lambda_insights_version_x86
-  lambda_insights_name    = var.architectures == tolist(["arm64"]) ? "LambdaInsightsExtension-Arm64" : "LambdaInsightsExtension"
+  lambda_insights_extension_version = var.lambda_insights_extension_version != null ? var.lambda_insights_extension_version : var.architectures == tolist(["arm64"]) ? local.default_lambda_insights_extension_version_arm : local.default_lambda_insights_extension_version_x86
+  lambda_insights_extension_name    = var.architectures == tolist(["arm64"]) ? "LambdaInsightsExtension-Arm64" : "LambdaInsightsExtension"
 
   # This is to make it so that ARM is supported in the future
-  parameters_and_secrets_version = var.parameters_and_secrets_version != null ? var.parameters_and_secrets_version : local.default_parameters_and_secrets_version_x86
+  parameters_and_secrets_extension_version = var.parameters_and_secrets_extension_version != null ? var.parameters_and_secrets_extension_version : local.default_parameters_and_secrets_extension_version_x86
 
-  parameters_and_secrets_name = "AWS-Parameters-and-Secrets-Lambda-Extension"
+  app_config_extension_version = var.app_config_extension_version != null ? var.app_config_extension_version : var.architectures == tolist(["arm64"]) ? local.default_app_config_extension_version_arm : local.default_app_config_extension_version_x86
+  app_config_extension_name    = var.architectures == tolist(["arm64"]) ? "AWS-AppConfig-Extension-Arm64" : "AWS-AppConfig-Extension"
+
+  add_ssm_extension_layer = var.add_ssm_extension_layer && var.architectures != tolist(["arm64"])
+
+  app_config_extension_supported_runtimes = [
+    "python3.7",
+    "python3.8",
+    "python3.9",
+    "nodejs12.x",
+    "nodejs14.x",
+    "ruby2.7",
+    "java8",
+    "java8.al2",
+    "java11",
+    "dotnetcore3.1",
+    "provided",
+    "provided.al2",
+  ]
+  add_app_config_extension_layer = var.add_app_config_extension_layer && contains(local.app_config_extension_supported_runtimes, var.runtime)
+
+  parameters_and_secrets_extension_name = "AWS-Parameters-and-Secrets-Lambda-Extension"
   default_layers = compact([
-    "arn:aws:lambda:${data.aws_region.current.name}:${var.lambda_insights_account_number}:layer:${local.lambda_insights_name}:${local.lambda_insights_version}",
-    var.architectures == tolist(["arm64"]) ? "" : "arn:aws:lambda:${data.aws_region.current.name}:${var.parameters_and_secrets_account_number}:layer:${local.parameters_and_secrets_name}:${local.parameters_and_secrets_version}",
+    "arn:aws:lambda:${data.aws_region.current.name}:${var.lambda_insights_extension_account_number}:layer:${local.lambda_insights_extension_name}:${local.lambda_insights_extension_version}",
+    local.add_ssm_extension_layer ? "arn:aws:lambda:${data.aws_region.current.name}:${var.parameters_and_secrets_extension_account_number}:layer:${local.parameters_and_secrets_extension_name}:${local.parameters_and_secrets_extension_version}" : "",
+    local.add_app_config_extension_layer ? "arn:aws:lambda:${data.aws_region.current.name}:${var.app_config_extension_account_number}:layer:${local.app_config_extension_name}:${local.app_config_extension_version}" : "",
   ])
 
   layers                = var.layers != null ? var.layers : local.default_layers
