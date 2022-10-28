@@ -43,6 +43,9 @@ func testLambda(t *testing.T, variant string) {
 	if variant == "ssm" {
 		expectedResponse = "\"Hello John!\""
 	}
+	if variant == "app-config" {
+		expectedResponse = "\"Hello Billy!\""
+	}
 
 	assert.Equal(t, expectedARN, arn)
 	assert.Equal(t, expectedName, name)

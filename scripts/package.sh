@@ -14,3 +14,5 @@ zip -j "$GIT_ROOT"/examples/artifacts/handler.zip "$GIT_ROOT"/examples/artifacts
 
 GOOS=linux GOARCH=arm64 go build -o "$GIT_ROOT"/examples/artifacts/main
 zip -j "$GIT_ROOT"/examples/artifacts/arm-handler.zip "$GIT_ROOT"/examples/artifacts/main
+
+zip -j "$GIT_ROOT"/examples/artifacts/app-config-handler.zip "$GIT_ROOT"/examples/src-app-config/main.py
