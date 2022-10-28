@@ -1,6 +1,6 @@
 # PBS TF Lambda Module
 
-## Installation
+Version: `0.0.7`
 
 ### Using the Repo Source
 
