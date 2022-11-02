@@ -1,7 +1,7 @@
 locals {
   name = var.name != null ? var.name : var.product
 
-  ssm_path         = var.ssm_path != null ? var.ssm_path : "/${var.environment}/${local.name}"
+  ssm_path         = var.ssm_path != null ? var.ssm_path : "/${var.environment}/${local.name}/"
   environment_vars = var.environment_vars != null ? var.environment_vars : { "SSM_PATH" = local.ssm_path }
   environment_map  = length(local.environment_vars) == 0 ? toset([]) : toset([local.environment_vars])
 
