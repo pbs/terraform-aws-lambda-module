@@ -159,13 +159,13 @@ variable "ssm_path" {
 }
 
 variable "add_ssm_extension_layer" {
-  description = "Add the AWS-Parameters-and-Secrets-Lambda-Extension layer to the Lambda function. Ignored if layers is not null or if using the ARM runtime."
+  description = "Add the AWS-Parameters-and-Secrets-Lambda-Extension layer to the Lambda function. Ignored if layers is not null or if `image_uri` is defined."
   default     = true
   type        = bool
 }
 
 variable "add_app_config_extension_layer" {
-  description = "Add the AWS-AppConfig-Lambda-Extension layer to the Lambda function. Ignored if layers is not null or if runtime is not supported."
+  description = "Add the AWS-AppConfig-Lambda-Extension layer to the Lambda function. Ignored if layers is not null or if `image_uri` is defined."
   default     = true
   type        = bool
 }
@@ -174,4 +174,10 @@ variable "allow_app_config_access" {
   description = "Allow AppConfig access from the Lambda function. Ignored if `policy_json` or `role_arn` are set."
   default     = true
   type        = bool
+}
+
+variable "package_type" {
+  description = "Package type for the Lambda function. Valid values are Zip and Image."
+  default     = "Zip"
+  type        = string
 }
