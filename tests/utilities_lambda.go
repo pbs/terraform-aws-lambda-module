@@ -65,7 +65,6 @@ func testLambda(t *testing.T, variant string) {
 		docker.Run(t, tag, runOptions)
 		defer docker.Stop(t, []string{variant}, &docker.StopOptions{Time: 5, Logger: logger})
 
-		// http_helper.HTTPDoWithCustomValidation(t, "POST", "http://localhost:8080/2015-03-31/functions/function/invocations", nil, "Hello, World!")
 		payload := []byte(`{}`)
 
 		req, err := http.NewRequest("POST", "http://localhost:8080/2015-03-31/functions/function/invocations", bytes.NewBuffer(payload))
