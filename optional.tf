@@ -175,3 +175,13 @@ variable "allow_app_config_access" {
   default     = true
   type        = bool
 }
+
+variable "ephemeral_storage_size" {
+  description = "Size of the ephemeral storage in MB. Ignored if runtime is not supported."
+  default     = 512
+  type        = number
+  validation {
+    condition     = var.ephemeral_storage_size >= 512 && var.ephemeral_storage_size <= 10240
+    error_message = "Ephemeral storage size must be between 512 and 10240 MB."
+  }
+}
