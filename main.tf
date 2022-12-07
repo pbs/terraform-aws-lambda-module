@@ -4,7 +4,9 @@ resource "aws_lambda_function" "lambda" {
   role             = local.role
   handler          = var.handler
   filename         = var.filename
-  source_code_hash = filebase64sha256(var.filename)
+  source_code_hash = local.source_code_hash
+  image_uri        = var.image_uri
+  package_type     = var.package_type
   runtime          = var.runtime
   timeout          = var.timeout
   memory_size      = var.memory_size
