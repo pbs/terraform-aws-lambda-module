@@ -37,6 +37,9 @@ resource "aws_lambda_function" "lambda" {
       subnet_ids         = local.subnet_ids
     }
   }
+  ephemeral_storage {
+    size = var.ephemeral_storage_size
+  }
   tags = local.tags
 
   depends_on = [
