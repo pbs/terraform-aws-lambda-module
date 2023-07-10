@@ -5,7 +5,7 @@
 ### Using the Repo Source
 
 ```hcl
-github.com/pbs/terraform-aws-lambda-module?ref=1.3.10
+github.com/pbs/terraform-aws-lambda-module?ref=x.y.z
 ```
 
 ### Alternative Installation Methods
@@ -22,7 +22,7 @@ Integrate this module like so:
 
 ```hcl
 module "role" {
-  source = "github.com/pbs/terraform-aws-lambda-module?ref=1.3.10"
+  source = "github.com/pbs/terraform-aws-lambda-module?ref=x.y.z"
 
   handler  = "main"
   filename = "../artifacts/handler.zip"
@@ -42,7 +42,7 @@ module "role" {
 
 If this repo is added as a subtree, then the version of the module should be close to the version shown here:
 
-`1.3.10`
+`x.y.z`
 
 Note, however that subtrees can be altered as desired within repositories.
 
@@ -71,7 +71,7 @@ Below is automatically generated documentation on this Terraform module using [t
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_default_role"></a> [default\_role](#module\_default\_role) | github.com/pbs/terraform-aws-iam-role-module | 0.1.4 |
+| <a name="module_default_role"></a> [default\_role](#module\_default\_role) | github.com/pbs/terraform-aws-iam-role-module | 0.1.7 |
 
 ## Resources
 
