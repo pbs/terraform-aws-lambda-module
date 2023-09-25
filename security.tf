@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "default_policy_document" {
 
 module "default_role" {
   count  = var.role_arn != null ? 0 : 1
-  source = "github.com/pbs/terraform-aws-iam-role-module?ref=0.1.17"
+  source = "github.com/pbs/terraform-aws-iam-role-module?ref=0.1.18"
 
   name = local.name
 
