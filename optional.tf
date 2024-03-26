@@ -191,3 +191,9 @@ variable "ephemeral_storage_size" {
     error_message = "Ephemeral storage size must be between 512 and 10240 MB."
   }
 }
+
+variable "log_group_class" {
+  description = "(Optional) log class of the log group. Possible values are: STANDARD or INFREQUENT_ACCESS"
+  default     = "INFREQUENT_ACCESS"
+  type        = string
+}
