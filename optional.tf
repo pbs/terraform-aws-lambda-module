@@ -193,7 +193,7 @@ variable "ephemeral_storage_size" {
 }
 
 variable "log_group_class" {
-  description = "(Optional) log class of the log group. Possible values are: STANDARD or INFREQUENT_ACCESS"
-  default     = "INFREQUENT_ACCESS"
+  description = "Log class of the log group. Possible values are: STANDARD or INFREQUENT_ACCESS"
+  default     = "STANDARD"
   type        = string
 }
